@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { User } from './_models/user';
 import { AccountService } from './_services/account.service';
@@ -14,7 +13,7 @@ export class AppComponent implements OnInit {
 
   constructor(private accountService: AccountService) {}
   ngOnInit(): void {
-
+    this.setCurrentUser();
   }
 
   setCurrentUser() {
