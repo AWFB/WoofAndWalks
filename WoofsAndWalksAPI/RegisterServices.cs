@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WoofsAndWalksAPI.Data;
+using WoofsAndWalksAPI.Data.Repositories;
+using WoofsAndWalksAPI.Helpers;
 using WoofsAndWalksAPI.Interfaces;
 using WoofsAndWalksAPI.Services;
 
@@ -24,6 +26,9 @@ public static class RegisterServices
         builder.Services.AddSwaggerGen();
         builder.Services.AddCors();
 
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
+
         // auth and JWT
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -37,6 +42,8 @@ public static class RegisterServices
                     ValidateAudience = false,
                 };
             });
+
+        
 
     }
 }
