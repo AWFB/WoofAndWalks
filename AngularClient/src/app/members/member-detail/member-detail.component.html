@@ -1,1 +1,67 @@
-<p>member-detail works!</p>
+<div class="row" *ngIf="member">
+  <div class="col-4">
+    <div class="card text-white border-primary mb-3">
+      <img
+        src="{{ member.photoUrl || './assets/user.png' }}"
+        alt="{{ member.knownAs }}"
+        class="card-img-top img-thumbnail"
+      />
+
+      <div class="card-body">
+        <div>
+          <strong>Location:</strong>
+          <p>{{ member.city }}, {{ member.country }}</p>
+        </div>
+
+        <div>
+          <strong>Age:</strong>
+          <p>{{ member.age }}</p>
+        </div>
+
+        <div>
+          <strong>Last Active:</strong>
+          <p>{{ member.lastActive }}</p>
+        </div>
+
+        <div>
+          <strong>Member since:</strong>
+          <p>{{ member.created }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="btn-group d-flex">
+        <button class="btn btn-primary">Like</button>
+        <button class="btn btn-info">Message</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-8">
+    <tabset class="member-tabset">
+      <tab heading="About {{ member.knownAs }}">
+        <h5>Description:</h5>
+        <p>{{ member.introduction }}</p>
+        <h5>Dog breed:</h5>
+        <p>{{ member.breedOfDog }}</p>
+        <h5>Dog Name:</h5>
+        <p>{{ member.nameOfDog }}</p>
+      </tab>
+
+      <tab heading="Photos">
+        <img class="gallery-item" src="{{ member.photoUrl }}" />
+      </tab>
+
+      <tab heading="Dog info">
+        <h5>Dog Breed:</h5>
+        <p>{{ member.breedOfDog }}</p>
+        <h5>Dog Name:</h5>
+        <p>{{ member.nameOfDog }}</p>
+      </tab>
+
+      <tab heading="Messages">
+        <p>Messages to go here</p>
+      </tab>
+    </tabset>
+  </div>
+</div>
