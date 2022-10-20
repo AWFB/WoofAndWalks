@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using WoofsAndWalksAPI.Data;
 using WoofsAndWalksAPI.DTOs;
 using WoofsAndWalksAPI.Interfaces;
@@ -36,6 +37,24 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<MemberDto>> GetSingleUser(string username)
     {
         return await _userRepository.GetMemberAsync(username);
+    }
+
+    [HttpPut]
+    public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
+    {
+        var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = await _userRepository.GetUserByUserameAsync(username);
+
+        _mapper.Map(memberUpdateDto, user);
+
+        _userRepository.Update(user);
+
+        if (await _userRepository.SaveAllAsync())
+        {
+            return NoContent();
+        }
+
+        return BadRequest("Failed to update user");
     }
 
 }

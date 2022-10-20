@@ -14,5 +14,7 @@ public class AutoMapperProfiles : Profile
             // calculate age extension method used here rather than in model for optimisation
             .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
         CreateMap<Photo, PhotoDto>();
+
+        CreateMap<MemberUpdateDto, AppUser>();
     }
 }

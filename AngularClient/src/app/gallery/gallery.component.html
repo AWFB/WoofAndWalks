@@ -1,0 +1,18 @@
+<section class="gallery">
+    <ng-container *ngIf="member">
+        <div class="img-container">
+            <img src="{{member.photoUrl}}" id="preview">
+            <div class="img-preview text-center">
+                <div class="img-slide active">
+                    <img src="{{member.photoUrl}}" imgSelect>
+                </div>
+                 <div class="img-slide">
+                    <img src="../../assets/user.png" imgSelect>
+                </div>
+                 <div class="img-slide">
+                    <img src="{{member.photoUrl}}" imgSelect>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</section>
