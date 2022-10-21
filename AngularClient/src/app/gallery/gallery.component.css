@@ -1,7 +1,7 @@
-.img-container {
-    width: 600px;
-    height: 500px;
-}
+/* .img-container {
+    width: 800px;
+    height: 600px;
+} */
 
 .img-container img {
     width: 100%;
@@ -14,7 +14,7 @@
 
 .img-slide {
     display: inline-block;
-    width: 24%;
+    width: 15%;
     margin: 0 1px;
     cursor: pointer;
     opacity: 0.5;

@@ -2,15 +2,14 @@
     <ng-container *ngIf="member">
         <div class="img-container">
             <img src="{{member.photoUrl}}" id="preview">
-            <div class="img-preview text-center">
+            <div class="img-preview text-center mb-2">
+
                 <div class="img-slide active">
                     <img src="{{member.photoUrl}}" imgSelect>
                 </div>
-                 <div class="img-slide">
-                    <img src="../../assets/user.png" imgSelect>
-                </div>
-                 <div class="img-slide">
-                    <img src="{{member.photoUrl}}" imgSelect>
+
+                 <div class="img-slide" *ngFor="let photo of member.photos">
+                    <img src="{{photo.url}}" imgSelect>
                 </div>
             </div>
         </div>

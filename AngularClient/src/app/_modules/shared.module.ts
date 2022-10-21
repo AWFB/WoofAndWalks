@@ -14,12 +14,13 @@ import { TabsModule } from 'ngx-bootstrap/tabs'
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right',
     }),
-    TabsModule.forRoot(),
+    TabsModule.forRoot(),    
   ],
   exports: [
     BsDropdownModule,
     ToastrModule,
     TabsModule,
+    
   ]
 })
 export class SharedModule {}

@@ -43,7 +43,9 @@ public static class RegisterServices
                 };
             });
 
-        
+        // Cloudinary
+        builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+        builder.Services.AddScoped<IPhotoService, PhotoService>();
 
     }
 }
