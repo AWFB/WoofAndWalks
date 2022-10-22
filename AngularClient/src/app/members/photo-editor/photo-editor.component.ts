@@ -49,6 +49,13 @@ export class PhotoEditorComponent implements OnInit {
       .post(this.baseUrl + 'users/add-photo', fd, httpOptions)
       .subscribe((photo: Photo) => {
         this.member.photos.push(photo);
+
+        // refresh profile picture in nav and edit profile on first upload
+        if (photo.isMain) {
+            this.user.photoUrl = photo.url
+            this.member.photoUrl = photo.url
+            this.accountService.setCurrentUser(this.user);
+        }
       });
   }
 
