@@ -1,4 +1,5 @@
 ﻿using WoofsAndWalksAPI.DTOs;
+using WoofsAndWalksAPI.Helpers;
 using WoofsAndWalksAPI.Models;
 
 namespace WoofsAndWalksAPI.Interfaces;
@@ -11,6 +12,7 @@ public interface IUserRepository
     Task<AppUser> GetUserByIdAsync(int id);
     Task<AppUser> GetUserByUserameAsync(string username);
 
-    Task<IEnumerable<MemberDto>> GetAllMembersAsync();
+    Task<PagedList<MemberDto>> GetAllMembersAsync(UserParams userParams);
+
     Task<MemberDto> GetMemberAsync(string username);
 }

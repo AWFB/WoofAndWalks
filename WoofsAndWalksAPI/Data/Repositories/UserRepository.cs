@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using WoofsAndWalksAPI.DTOs;
+using WoofsAndWalksAPI.Helpers;
 using WoofsAndWalksAPI.Interfaces;
 using WoofsAndWalksAPI.Models;
 
@@ -48,10 +49,13 @@ namespace WoofsAndWalksAPI.Data.Repositories
             _context.Entry(user).State = EntityState.Modified;
         }
 
-        public async Task<IEnumerable<MemberDto>> GetAllMembersAsync()
+        public async Task<PagedList<MemberDto>> GetAllMembersAsync(UserParams userParams)
         {
-            return await _context.Users.ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+            var query = _context.Users
+                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking();
+
+            return await PagedList<MemberDto>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<MemberDto> GetMemberAsync(string username)

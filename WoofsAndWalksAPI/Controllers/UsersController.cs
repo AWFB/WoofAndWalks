@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WoofsAndWalksAPI.DTOs;
 using WoofsAndWalksAPI.Extensions;
+using WoofsAndWalksAPI.Helpers;
 using WoofsAndWalksAPI.Interfaces;
 using WoofsAndWalksAPI.Models;
 
@@ -26,9 +27,11 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetAllUsers()
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetAllUsers([FromQuery]UserParams userParams)
     {
-        var users = await _userRepository.GetAllMembersAsync();
+        var users = await _userRepository.GetAllMembersAsync(userParams);
+
+        Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
 
         return Ok(users);
     }
