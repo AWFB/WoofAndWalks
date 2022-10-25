@@ -25,6 +25,7 @@ public static class RegisterServices
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddCors();
+        builder.Services.AddScoped<LogUserActivity>();
 
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);

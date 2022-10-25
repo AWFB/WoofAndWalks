@@ -5,14 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WoofsAndWalksAPI.Data;
 using WoofsAndWalksAPI.DTOs;
+using WoofsAndWalksAPI.Helpers;
 using WoofsAndWalksAPI.Interfaces;
 using WoofsAndWalksAPI.Models;
 
 namespace WoofsAndWalksAPI.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
-public class AccountController : ControllerBase
+public class AccountController : BaseApiController
 {
     private readonly DataContext _context;
     private readonly ITokenService _tokenService;
@@ -45,7 +45,8 @@ public class AccountController : ControllerBase
         {
             UserName = user.UserName,
             Token = _tokenService.CreateToken(user),
-            KnownAs = user.KnownAs
+            KnownAs = user.KnownAs,
+            Gender = user.Gender
         };
     }
 
@@ -72,7 +73,8 @@ public class AccountController : ControllerBase
             UserName = user.UserName,
             Token = _tokenService.CreateToken(user),
             PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
-            KnownAs = user.KnownAs
+            KnownAs = user.KnownAs,
+            Gender = user.Gender
         };
     }
 

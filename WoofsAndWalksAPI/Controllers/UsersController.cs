@@ -9,10 +9,9 @@ using WoofsAndWalksAPI.Models;
 
 namespace WoofsAndWalksAPI.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
+
 [Authorize]
-public class UsersController : ControllerBase
+public class UsersController : BaseApiController
 {
 
     private readonly IUserRepository _userRepository;
@@ -29,6 +28,14 @@ public class UsersController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetAllUsers([FromQuery]UserParams userParams)
     {
+        var user = await _userRepository.GetUserByUserameAsync(User.GetUserName());
+        userParams.CurrentUsername = user.UserName;
+
+        if (string.IsNullOrEmpty(userParams.Gender))
+        {
+            userParams.Gender = user.Gender == "male" ? "female" : "male";
+        }
+
         var users = await _userRepository.GetAllMembersAsync(userParams);
 
         Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
