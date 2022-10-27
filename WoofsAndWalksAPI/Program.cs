@@ -14,7 +14,7 @@ var app = builder.Build();
 if (args.Length == 1 && args[0].ToLower() == "seeddata")
 {
     //SeedData.EnsureDataPopulated(app);
-    Seed.SeedUsers(app);
+    await Seed.SeedUsers(app);
 }
 
 // Configure the HTTP request pipeline.

@@ -28,6 +28,7 @@ public static class RegisterServices
         builder.Services.AddScoped<LogUserActivity>();
 
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<ILikesRepository, LikesRepository>();
         builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
         // auth and JWT

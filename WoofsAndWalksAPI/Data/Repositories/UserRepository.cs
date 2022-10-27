@@ -24,7 +24,7 @@ namespace WoofsAndWalksAPI.Data.Repositories
             return await _context.Users.FindAsync(id);
         }
 
-        public async Task<AppUser> GetUserByUserameAsync(string username)
+        public async Task<AppUser> GetUserByUsernameAsync(string username)
         {
             return await _context.Users
                 .Include(p => p.Photos)

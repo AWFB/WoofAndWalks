@@ -28,7 +28,7 @@ public class UsersController : BaseApiController
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MemberDto>>> GetAllUsers([FromQuery]UserParams userParams)
     {
-        var user = await _userRepository.GetUserByUserameAsync(User.GetUserName());
+        var user = await _userRepository.GetUserByUsernameAsync(User.GetUserName());
         userParams.CurrentUsername = user.UserName;
 
         if (string.IsNullOrEmpty(userParams.Gender))
@@ -52,7 +52,7 @@ public class UsersController : BaseApiController
     [HttpPut]
     public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
     {
-        var user = await _userRepository.GetUserByUserameAsync(User.GetUserName());
+        var user = await _userRepository.GetUserByUsernameAsync(User.GetUserName());
 
         _mapper.Map(memberUpdateDto, user);
 
@@ -69,7 +69,7 @@ public class UsersController : BaseApiController
     [HttpPost("add-photo")]
     public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
     {
-        var user = await _userRepository.GetUserByUserameAsync(User.GetUserName());
+        var user = await _userRepository.GetUserByUsernameAsync(User.GetUserName());
 
         var result = await _photoService.AddPhotoAsync(file);
 
@@ -98,7 +98,7 @@ public class UsersController : BaseApiController
     [HttpPut("set-main-photo/{photoId}")]
     public async Task<ActionResult> SetMainPhoto(int photoId)
     {
-        var user = await _userRepository.GetUserByUserameAsync(User.GetUserName());
+        var user = await _userRepository.GetUserByUsernameAsync(User.GetUserName());
 
         var photo = user.Photos.FirstOrDefault(p => p.Id == photoId);
 
@@ -116,7 +116,7 @@ public class UsersController : BaseApiController
     [HttpDelete("delete-photo/{photoid}")]
     public async Task<ActionResult> DeletePhoto(int photoId)
     {
-        var user = await _userRepository.GetUserByUserameAsync(User.GetUserName());
+        var user = await _userRepository.GetUserByUsernameAsync(User.GetUserName());
 
         var photo = user.Photos.FirstOrDefault(p => p.Id == photoId);
 

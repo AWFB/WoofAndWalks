@@ -17,7 +17,6 @@ export class ErrorInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    
     return next.handle(request).pipe(
       catchError((error) => {
         if (error) {
@@ -25,14 +24,20 @@ export class ErrorInterceptor implements HttpInterceptor {
             case 400:
               if (error.error.errors) {
                 const modelStateErrors = [];
+               
                 for (const key in error.error.errors) {
                   if (error.error.errors[key]) {
                     modelStateErrors.push(error.error.errors[key]);
                   }
                 }
                 throw modelStateErrors.flat();
-              } else {
+
+                // for getting the error for likes when you have already liked
+              } else if (typeof(error.error) === 'object') {
                 this.toastr.error(error.statusText, error.status);
+
+              } else {
+                this.toastr.error(error.error, error.status);
               }
               break;
 
@@ -45,17 +50,19 @@ export class ErrorInterceptor implements HttpInterceptor {
               break;
 
             case 500:
-              const navigationExtras: NavigationExtras = {state: {error: error.error} }
+              const navigationExtras: NavigationExtras = {
+                state: { error: error.error },
+              };
               this.router.navigateByUrl('/server-error', navigationExtras);
               break;
 
             default:
-                this.toastr.error('Something unexpected went wrong')
-                console.log(error);
+              this.toastr.error('Something unexpected went wrong');
+              console.log(error);
               break;
           }
         }
-        return throwError(() => error)
+        return throwError(() => error);
       })
     );
   }

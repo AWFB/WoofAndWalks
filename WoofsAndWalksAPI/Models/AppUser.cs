@@ -19,13 +19,10 @@ public class AppUser
     public string? City { get; set; }
     public string? Country { get; set; }
 
-    // ef - one to many
-    public ICollection<Photo> Photos { get; set; }
+    public ICollection<Photo>? Photos { get; set; }
 
-    // Extension method for DOB
-    // Needs to be named like this for automapper to work
-    //public int GetAge()
-    //{
-    //    return DateOfBirth.CalculateAge();
-    //}
+    public ICollection<UserLike>? LikedByUsers { get; set; }
+    public ICollection<UserLike>? LikedUsers { get; set; }
 }
+
+   
