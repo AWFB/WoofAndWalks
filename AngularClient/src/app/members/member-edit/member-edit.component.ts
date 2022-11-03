@@ -39,7 +39,7 @@ export class MemberEditComponent implements OnInit {
   }
 
   loadMember() {
-    this.memberService.getMember(this.user.userName).subscribe((member) => {
+    this.memberService.getMember(this.user.username).subscribe((member) => {
       this.member = member;
     });
   }
@@ -49,6 +49,6 @@ export class MemberEditComponent implements OnInit {
         this.toastr.success('Profile Updated');
         this.editForm.reset(this.member);
     })
-    
+
   }
 }

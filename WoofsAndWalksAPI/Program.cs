@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using WoofsAndWalksAPI;
 using WoofsAndWalksAPI.Data;
 using WoofsAndWalksAPI.Middleware;
+using WoofsAndWalksAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,10 +14,17 @@ builder.ConfigureInjection();
 
 var app = builder.Build();
 
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+
 if (args.Length == 1 && args[0].ToLower() == "seeddata")
 {
     //SeedData.EnsureDataPopulated(app);
-    await Seed.SeedUsers(app);
+    var context = services.GetRequiredService<DataContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
+    await context.Database.MigrateAsync();
+    await Seed.SeedUsers(userManager, roleManager);
 }
 
 // Configure the HTTP request pipeline.
