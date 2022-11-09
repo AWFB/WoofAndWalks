@@ -1,13 +1,13 @@
 <div class="card">
   <div class="card-body">
-    <div *ngIf="messages?.length === 0">No Messages yet</div>
+    <div *ngIf="(messageService.messageThread$ | async)?.length === 0">No Messages yet</div>
 
-    <ul *ngIf="messages?.length > 0" class="chat">
-      <li *ngFor="let message of messages">
-        <div class="d-flex">
-          <span class="chat-img">
+    <ul *ngIf="(messageService.messageThread$ | async)?.length > 0" class="chat">
+      <li *ngFor="let message of (messageService.messageThread$ | async)">
+        <div>
+          <span class="chat-img float-start me-2">
             <img
-              class="rounded-circle"
+              class="profile-picture"
               src="{{ message.senderPhotoUrl || './assets/user.png' }}"
               alt="{{ message.senderUsername }}"
             />
@@ -15,7 +15,7 @@
           <div class="chat-body">
             <div class="header">
               <small class="text-muted">
-                <span>{{ message.messageSent | date }}</span>
+                <span>{{ message.messagesSent | date }}</span>
                 <span
                   class="text-danger"
                   *ngIf="
@@ -36,6 +36,7 @@
               </small>
             </div>
             <p>{{ message.content }}</p>
+            <hr>
           </div>
         </div>
       </li>
