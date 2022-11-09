@@ -26,7 +26,7 @@ public class AdminController : BaseApiController
             .Select(u => new
             {
                 u.Id,
-                Username = u.UserName,
+                username = u.UserName,
                 Roles = u.UserRoles.Select(r => r.Role.Name).ToList()
             })
             .ToListAsync();

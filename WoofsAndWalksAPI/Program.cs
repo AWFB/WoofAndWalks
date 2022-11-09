@@ -4,6 +4,7 @@ using WoofsAndWalksAPI;
 using WoofsAndWalksAPI.Data;
 using WoofsAndWalksAPI.Middleware;
 using WoofsAndWalksAPI.Models;
+using WoofsAndWalksAPI.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,11 +39,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+app.UseCors(policy => policy
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials()
+    .WithOrigins("https://localhost:4200"));
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<PresenceHub>("hubs/presence");
+app.MapHub<MessageHub>("hubs/message");
 
 app.Run();

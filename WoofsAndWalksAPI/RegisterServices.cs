@@ -9,6 +9,7 @@ using WoofsAndWalksAPI.Helpers;
 using WoofsAndWalksAPI.Interfaces;
 using WoofsAndWalksAPI.Models;
 using WoofsAndWalksAPI.Services;
+using WoofsAndWalksAPI.SignalR;
 
 namespace WoofsAndWalksAPI;
 
@@ -28,6 +29,9 @@ public static class RegisterServices
         builder.Services.AddSwaggerGen();
         builder.Services.AddCors();
         builder.Services.AddScoped<LogUserActivity>();
+
+        builder.Services.AddSignalR();
+        builder.Services.AddSingleton<PresenceTracker>();
 
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<ILikesRepository, LikesRepository>();
@@ -55,6 +59,23 @@ public static class RegisterServices
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"])), 
                     ValidateIssuer = false,
                     ValidateAudience = false,
+                };
+                
+                // allows client to send up token in query string 
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
         

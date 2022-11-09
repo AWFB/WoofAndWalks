@@ -31,11 +31,11 @@ public class AccountController : BaseApiController
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto) // no need for [FromBody] as api controller sorts this for us
     {
-        if (await UserExists(registerDto.UserName)) return BadRequest("Username is already in use");
+        if (await UserExists(registerDto.Username)) return BadRequest("Username is already in use");
 
         var user = _mapper.Map<AppUser>(registerDto);
 
-        user.UserName = registerDto.UserName.ToLower();
+        user.UserName = registerDto.Username.ToLower();
 
         var result = await _userManager.CreateAsync(user, registerDto.Password);
         if (!result.Succeeded) return BadRequest(result.Errors);
@@ -46,7 +46,7 @@ public class AccountController : BaseApiController
 
         return new UserDto
         {
-            UserName = user.UserName,
+            Username = user.UserName,
             Token = await _tokenService.CreateToken(user),
             KnownAs = user.KnownAs,
             Gender = user.Gender
@@ -58,7 +58,7 @@ public class AccountController : BaseApiController
     {
         var user = await _userManager.Users
             .Include(p => p.Photos)
-            .SingleOrDefaultAsync(x => x.UserName == loginDto.UserName.ToLower());
+            .SingleOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
 
         if (user == null) return Unauthorized("Invalid username");
 
@@ -67,7 +67,7 @@ public class AccountController : BaseApiController
 
         return new UserDto
         {
-            UserName = user.UserName,
+            Username = user.UserName,
             Token = await _tokenService.CreateToken(user),
             PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
             KnownAs = user.KnownAs,
