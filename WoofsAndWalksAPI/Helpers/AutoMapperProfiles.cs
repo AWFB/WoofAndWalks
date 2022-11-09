@@ -23,5 +23,10 @@ public class AutoMapperProfiles : Profile
                 opt => opt.MapFrom(src => src.Sender.Photos.FirstOrDefault(x => x.IsMain).Url))
             .ForMember(dest => dest.RecipientPhotoUrl,
             opt => opt.MapFrom(src => src.Recipient.Photos.FirstOrDefault(x => x.IsMain).Url));
+        
+        // return correct date time format as UTC
+        // Sticks a Z on the end of the string in the websocket to show its in UTC
+        // important as different browsers handle datetime differently
+        CreateMap<DateTime, DateTime>().ConvertUsing(d => DateTime.SpecifyKind(d, DateTimeKind.Utc));
     }
 }
