@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
 import { Member } from 'src/app/_models/member';
 import { Message } from 'src/app/_models/message';
@@ -27,8 +27,14 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     public presence: PresenceService,
     private route: ActivatedRoute,
     private messageService: MessageService,
-    private accountService: AccountService
-  ) {this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user)}
+    private accountService: AccountService,
+    private router: Router) {
+      this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
+
+      // this is needed to prevent angular reusing routes which prevents messages
+      // from being loaded when toast is clicked to take user to messages
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
 
 

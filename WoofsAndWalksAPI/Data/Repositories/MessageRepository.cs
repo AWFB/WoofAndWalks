@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using WoofsAndWalksAPI.DTOs;
+using WoofsAndWalksAPI.Extensions;
 using WoofsAndWalksAPI.Helpers;
 using WoofsAndWalksAPI.Interfaces;
 using WoofsAndWalksAPI.Models;
@@ -41,6 +42,15 @@ public class MessageRepository : IMessageRepository
             .FirstOrDefaultAsync(x => x.Name == groupName);
     }
 
+    public async Task<Group> GetGroupForConnection(string connectionId)
+    {
+        return await _context.Groups
+            .Include(c => c.Connections)
+            .Where(c => c.Connections
+                .Any(x => x.ConnectionId == connectionId))
+            .FirstOrDefaultAsync();
+    }
+
     public void AddMessage(Message message)
     {
         _context.Messages.Add(message);
@@ -70,7 +80,8 @@ public class MessageRepository : IMessageRepository
             "Inbox" => query.Where(u => u.Recipient.UserName == messageParams.Username && u.RecipientDeleted == false),
             "Outbox" => query.Where(u => u.Sender.UserName == messageParams.Username && u.SenderDeleted == false),
             _ => query.Where(u =>
-                u.Recipient.UserName == messageParams.Username && u.RecipientDeleted == false && u.DateRead == null) // default case - message unread
+                u.Recipient.UserName == messageParams.Username && u.RecipientDeleted == false &&
+                u.DateRead == null) // default case - message unread
         };
 
         var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
@@ -78,35 +89,21 @@ public class MessageRepository : IMessageRepository
         return await PagedList<MessageDto>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
     }
 
-    public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername)
+    public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername,
+        string recipientUsername)
     {
-        // message conversation for 2 users
         var messages = await _context.Messages
-            .Include(u => u.Sender).ThenInclude(p => p.Photos)
-            .Include(u => u.Recipient).ThenInclude(p => p.Photos)
             .Where(m => m.Recipient.UserName == currentUsername && m.RecipientDeleted == false
-                && m.Sender.UserName == recipientUsername
-                || m.Recipient.UserName == recipientUsername
-                && m.Sender.UserName == currentUsername && m.SenderDeleted == false
+                                                                && m.Sender.UserName == recipientUsername
+                        || m.Recipient.UserName == recipientUsername
+                        && m.Sender.UserName == currentUsername && m.SenderDeleted == false
             )
+            .MarkUnreadAsRead(currentUsername)
             .OrderBy(m => m.MessageSent)
+            .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
 
-        var unreadMessages =
-            messages.Where(m => m.DateRead == null && m.Recipient.UserName == currentUsername).ToList();
-
-        if (unreadMessages.Any())
-        {
-            foreach (var message in unreadMessages)
-            {
-                message.DateRead = DateTime.UtcNow;
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
-        return _mapper.Map<IEnumerable<MessageDto>>(messages);
-
+        return messages;
     }
 
     public async Task<bool> SaveAllAsync()
