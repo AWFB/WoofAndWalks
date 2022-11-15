@@ -2,7 +2,8 @@
   <div class="card-body">
     <div *ngIf="(messageService.messageThread$ | async)?.length === 0">No Messages yet</div>
 
-    <ul *ngIf="(messageService.messageThread$ | async)?.length > 0" class="chat">
+    <ul #scrollMe style="overflow: auto; height: 500px" [scrollTop]="scrollMe.scrollHeight"
+      *ngIf="(messageService.messageThread$ | async)?.length > 0" class="chat">
       <li *ngFor="let message of (messageService.messageThread$ | async)">
         <div>
           <span class="chat-img float-start me-2">

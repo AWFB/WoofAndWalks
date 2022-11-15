@@ -1,4 +1,6 @@
-﻿namespace WoofsAndWalksAPI.DTOs;
+﻿using System.Text.Json.Serialization;
+
+namespace WoofsAndWalksAPI.DTOs;
 
 public class MessageDto
 {
@@ -14,4 +16,9 @@ public class MessageDto
     public string Content { get; set; }
     public DateTime? DateRead { get; set; } // null if not read
     public DateTime MessageSent { get; set; }
+    
+    [JsonIgnore] // dont send these back to client
+    public bool SenderDeleted { get; set; }
+    [JsonIgnore]
+    public bool RecipientDeleted { get; set; }
 }

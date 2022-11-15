@@ -33,9 +33,7 @@ public static class RegisterServices
         builder.Services.AddSignalR();
         builder.Services.AddSingleton<PresenceTracker>();
 
-        builder.Services.AddScoped<IUserRepository, UserRepository>();
-        builder.Services.AddScoped<ILikesRepository, LikesRepository>();
-        builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
         // auth and JWT- AddIdentityCore needed for token auth 
