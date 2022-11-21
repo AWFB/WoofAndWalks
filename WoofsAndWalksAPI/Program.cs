@@ -48,8 +48,12 @@ app.UseCors(policy => policy
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseDefaultFiles(); // use index.html
+app.UseStaticFiles();
+
 app.MapControllers();
 app.MapHub<PresenceHub>("hubs/presence");
 app.MapHub<MessageHub>("hubs/message");
+app.MapFallbackToController("Index", "FallBack");
 
 app.Run();
